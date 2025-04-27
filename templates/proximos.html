@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Contratos por Vencer</title></head>
+<body>
+  <h2>Contratos que Vencen en 15 Días</h2>
+  <table border="1">
+    <tr>
+      <th>Nombre</th>
+      <th>CEDIS</th>
+      <th>Puesto</th>
+      <th>Fecha Fin</th>
+    </tr>
+    {% for contrato in contratos %}
+    <tr>
+      <td>{{ contrato.nombre }}</td>
+      <td>{{ contrato.cedis }}</td>
+      <td>{{ contrato.puesto }}</td>
+      <td>{{ contrato.fecha_fin }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <br>
+  <a href="{{ url_for('index') }}">Volver al Registro</a>
+</body>
+</html>

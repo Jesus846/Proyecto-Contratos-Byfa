@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Registro de Contratados</title></head>
+<body>
+  <h2>Registro de Contratados</h2>
+  <form method="POST">
+    <label>Fecha de Registro:</label><input type="date" name="fecha_registro" required><br>
+    <label>CEDIS:</label><input type="text" name="cedis" required><br>
+    <label>Sexo:</label><input type="text" name="sexo" required><br>
+    <label>Nombre:</label><input type="text" name="nombre" required><br>
+    <label>Puesto:</label><input type="text" name="puesto" required><br>
+    <label>Fecha de Inicio:</label><input type="date" name="fecha_inicio" required><br>
+    <label>Fecha de Finalización:</label><input type="date" name="fecha_fin"><br>
+    <button type="submit">Registrar</button>
+  </form>
+  <br>
+  <a href="{{ url_for('proximos') }}">Ver Contratos por Vencer</a>
+</body>
+</html>
