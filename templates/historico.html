@@ -112,7 +112,14 @@
 </head>
 <body>
 
-<header>Histórico de Contratos</header>
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; background: linear-gradient(to right, #ff7043, #ffa726); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Izquierdo" style="height: 100px;">
+  
+  <div style="font-size: 28px; font-weight: bold; color: white; text-align: center;">Histórico de Contratos</div>
+  
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Derecho" style="height: 100px;">
+</header>
 
 <main>
   <h2>Todos los Contratos Registrados</h2>
