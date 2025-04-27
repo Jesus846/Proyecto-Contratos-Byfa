@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Baja de Personal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7043, #ffa726);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    h2, h3 {
+      text-align: center;
+      color: #ff7043;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #ff5722;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 5px;
+      border: 2px solid #ffd54f;
+      border-radius: 8px;
+      background-color: #fffde7;
+      transition: 0.3s;
+    }
+
+    select:focus {
+      border-color: #ff9800;
+      outline: none;
+      background-color: #fff9c4;
+    }
+
+    button {
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      margin-top: 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #fb8c00;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 2px solid #ffd54f;
+    }
+
+    table th {
+      background-color: #ff7043;
+      color: white;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f8f8f8;
+    }
+
+    a {
+      color: #e74c3c;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .volver-btn {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .volver-btn a {
+      background-color: #ff7043;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s;
+    }
+
+    .volver-btn a:hover {
+      background-color: #fb8c00;
+    }
+
+  </style>
+</head>
+<body>
+
+<header>Baja de Personal</header>
+
+<main>
+  <form method="POST">
+    <h2>Buscar Personal por CEDIS</h2>
+
+    <label for="cedis_id">Selecciona un CEDIS:</label>
+    <select name="cedis_id" id="cedis_id" required>
+      {% for cedi in cedis %}
+        <option value="{{ cedi.id }}">{{ cedi.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Buscar</button>
+  </form>
+
+  {% if empleados %}
+    <h3>Empleados Encontrados</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Puesto</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for empleado in empleados %}
+          <tr>
+            <td>{{ empleado.nombre }}</td>
+            <td>{{ empleado.puesto }}</td>
+            <td>
+              <a href="{{ url_for('confirmar_baja', empleado_id=empleado.id) }}">Dar de baja</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% elif cedis %}
+    <p style="text-align: center; margin-top: 20px;">Selecciona un CEDIS para mostrar su personal disponible.</p>
+  {% endif %}
+
+  <div class="volver-btn">
+    <a href="{{ url_for('index') }}">⬅️ Volver al Inicio</a>
+  </div>
+  <div class="volver-btn" style="margin-top: 10px;">
+    <a href="{{ url_for('historico_bajas') }}">📋 Ver Históricos de Bajas</a>
+</div>
+</main>
+
+</body>
+</html>

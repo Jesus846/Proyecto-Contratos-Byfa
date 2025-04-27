@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Históricos de Bajas</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7043, #ffa726);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff7043;
+      margin-bottom: 20px;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ffd54f;
+      border-radius: 8px;
+      background-color: #fffde7;
+      transition: 0.3s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ff9800;
+      background-color: #fff9c4;
+      outline: none;
+    }
+
+    button {
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #fb8c00;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    table th, table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 2px solid #ffd54f;
+    }
+
+    table th {
+      background-color: #ff7043;
+      color: white;
+    }
+
+    table tr:nth-child(even) {
+      background-color: #f8f8f8;
+    }
+
+    .volver-btn {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .volver-btn a {
+      background-color: #ff7043;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s;
+    }
+
+    .volver-btn a:hover {
+      background-color: #fb8c00;
+    }
+  </style>
+</head>
+<body>
+
+<header>Históricos de Bajas</header>
+
+<main>
+  <h2>Personal Dado de Baja</h2>
+
+  <form method="GET">
+    <input type="text" name="buscar" placeholder="Buscar por nombre..." value="{{ request.args.get('buscar', '') }}">
+    <button type="submit">Buscar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Puesto</th>
+        <th>CEDIS</th>
+        <th>Motivo</th>
+        <th>Fecha de Baja</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for baja in bajas %}
+        <tr>
+          <td>{{ baja.nombre }}</td>
+          <td>{{ baja.puesto }}</td>
+          <td>{{ baja.cedis }}</td>
+          <td>{{ baja.motivo }}</td>
+          <td>{{ baja.fecha_baja }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="5" style="text-align: center;">No se encontraron registros.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="volver-btn">
+    <a href="{{ url_for('baja_personal') }}">⬅️ Volver a Baja de Personal</a>
+  </div>
+</main>
+
+</body>
+</html>

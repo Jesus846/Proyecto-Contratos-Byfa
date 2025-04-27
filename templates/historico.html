@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Contratos por Vencer</title>
+  <title>Histórico de Contratos</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
+      background-color: #f4f4f9;
       margin: 0;
       padding: 0;
     }
@@ -24,54 +24,68 @@
     main {
       max-width: 900px;
       margin: 40px auto;
-      background: #fff3e0;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
     }
 
     h2 {
       text-align: center;
-      color: #d84315;
+      color: #ff7043;
       margin-bottom: 20px;
     }
 
-    form {
-      text-align: center;
-      margin-bottom: 20px;
+    label {
+      display: block;
+      font-size: 18px;
+      color: #ff5722;
+      margin-bottom: 10px;
     }
 
     select {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      width: 100%;
+      padding: 12px;
       font-size: 16px;
+      border: 2px solid #ffd54f;
+      border-radius: 8px;
+      background-color: #fffde7;
+      margin-bottom: 20px;
+      transition: 0.3s;
+    }
+
+    select:focus {
+      border-color: #ff9800;
+      background-color: #fff9c4;
+      outline: none;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     th, td {
-      border: 2px solid #ffe082;
+      border-bottom: 2px solid #ffd54f;
       padding: 12px 15px;
       text-align: center;
       font-size: 16px;
     }
 
     th {
-      background-color: #ffcc80;
-      color: #bf360c;
+      background-color: #ff7043;
+      color: white;
     }
 
     tr:nth-child(even) {
-      background-color: #fff9c4;
+      background-color: #f8f8f8;
     }
 
     tr:hover {
-      background-color: #ffe082;
+      background-color: #ffe0b2;
     }
 
     a {
@@ -79,7 +93,7 @@
       text-align: center;
       margin-top: 30px;
       font-size: 16px;
-      color: #e64a19;
+      color: #ff7043;
       text-decoration: none;
       font-weight: bold;
     }
@@ -87,19 +101,26 @@
     a:hover {
       text-decoration: underline;
     }
+
+    p {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
 
-<header>Contratos por Vencer</header>
+<header>Histórico de Contratos</header>
 
 <main>
-  <h2>Contratos que Vencen en 15 Días</h2>
+  <h2>Todos los Contratos Registrados</h2>
 
-  <form method="get" action="{{ url_for('proximos') }}">
+  <form method="get" action="{{ url_for('historico') }}">
     <label for="cedis">Filtrar por CEDIS:</label>
     <select name="cedis" id="cedis" onchange="this.form.submit()">
-      <option value="">-- Todos --</option>
+      <option value="">-- Selecciona un CEDIS --</option>
       {% for cedis in cedis_list %}
         <option value="{{ cedis.nombre }}" {% if selected_cedis == cedis.nombre %}selected{% endif %}>
           {{ cedis.nombre }}
@@ -108,26 +129,40 @@
     </select>
   </form>
 
+  {% if contratos %}
   <table>
     <tr>
       <th>Nombre</th>
       <th>CEDIS</th>
       <th>Puesto</th>
+      <th>Fecha Inicio</th>
       <th>Fecha Fin</th>
+      <th>Acciones</th> <!-- Nueva columna -->
     </tr>
     {% for contrato in contratos %}
     <tr>
       <td>{{ contrato.nombre }}</td>
       <td>{{ contrato.cedis }}</td>
       <td>{{ contrato.puesto }}</td>
-      <td>{{ contrato.fecha_fin.strftime('%d/%m/%Y') }}</td>
+      <td>{{ contrato.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+      <td>
+        {% if contrato.fecha_fin %}
+          {{ contrato.fecha_fin.strftime('%d/%m/%Y') }}
+        {% else %}
+          Indefinido
+        {% endif %}
+      </td>
+      <td>
+        <a href="{{ url_for('editar_contrato', contrato_id=contrato.id) }}" style="color: #ff5722; font-weight: bold;">✏️ Modificar</a>
+      </td>
     </tr>
     {% endfor %}
   </table>
+  {% elif selected_cedis %}
+  <p>No hay contratos registrados para este CEDIS.</p>
+  {% endif %}
 
   <a href="{{ url_for('index') }}">⏪ Volver al Registro</a>
-  <a href="{{ url_for('historico') }}">📜 Ver Histórico de Contratos</a>
-
 </main>
 
 </body>

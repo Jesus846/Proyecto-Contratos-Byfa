@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Contrato</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f9;
+      padding: 40px;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #ff7043;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ff5722;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 2px solid #ffd54f;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #ff7043;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 100%;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff5722;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #ff7043;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<form method="POST">
+  <h2>Editar Contrato</h2>
+
+  <label for="nombre">Nombre</label>
+  <input type="text" id="nombre" name="nombre" value="{{ contrato.nombre }}" required>
+
+  <label for="puesto">Puesto</label>
+  <input type="text" id="puesto" name="puesto" value="{{ contrato.puesto }}" required>
+
+  <label for="cedis">CEDIS</label>
+<select id="cedis" name="cedis" required>
+  {% for cedis in cedis_list %}
+    <option value="{{ cedis.nombre }}" {% if contrato.cedis == cedis.nombre %}selected{% endif %}>
+      {{ cedis.nombre }}
+    </option>
+  {% endfor %}
+</select>
+
+  <label for="fecha_inicio">Fecha de Inicio</label>
+  <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ contrato.fecha_inicio.strftime('%Y-%m-%d') }}" required>
+
+  <label for="fecha_fin">Fecha de Fin</label>
+  <input type="date" id="fecha_fin" name="fecha_fin" value="{{ contrato.fecha_fin.strftime('%Y-%m-%d') if contrato.fecha_fin else '' }}">
+
+  <button type="submit">💾 Guardar Cambios</button>
+
+  <a href="{{ url_for('historico') }}">⏪ Cancelar y Volver</a>
+</form>
+
+</body>
+</html>

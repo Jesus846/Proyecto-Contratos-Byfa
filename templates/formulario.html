@@ -1,19 +1,233 @@
 <!DOCTYPE html>
-<html>
-<head><title>Registro de Contratados</title></head>
-<body>
-  <h2>Registro de Contratados</h2>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Contratados</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7043, #ffa726);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    main {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #fff3e0;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #d84315;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #e65100;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 5px;
+      border: 2px solid #ffd54f;
+      border-radius: 12px;
+      background-color: #fffde7;
+      transition: 0.3s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #ffb300;
+      outline: none;
+      background-color: #fff9c4;
+    }
+
+    button {
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      margin-top: 30px;
+      font-size: 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #fb8c00;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 16px;
+      color: #bf360c;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; background: linear-gradient(to right, #ff7043, #ffa726); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Izquierdo" style="height: 100px;">
+  
+  <div style="font-size: 28px; font-weight: bold; color: white; text-align: center;">Registro de Contratados</div>
+  
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Derecho" style="height: 100px;">
+</header>
+
+  
+<main>
   <form method="POST">
-    <label>Fecha de Registro:</label><input type="date" name="fecha_registro" required><br>
-    <label>CEDIS:</label><input type="text" name="cedis" required><br>
-    <label>Sexo:</label><input type="text" name="sexo" required><br>
-    <label>Nombre:</label><input type="text" name="nombre" required><br>
-    <label>Puesto:</label><input type="text" name="puesto" required><br>
-    <label>Fecha de Inicio:</label><input type="date" name="fecha_inicio" required><br>
-    <label>Fecha de Finalización:</label><input type="date" name="fecha_fin"><br>
+    <h2>Nuevo Contrato</h2>
+
+    <label>Fecha de Registro:</label>
+    <input type="date" name="fecha_registro" required>
+
+    <label>CEDIS:</label>
+    <select name="cedis" id="cedis" required>
+      <option value="">-- Selecciona --</option>
+      {% for c in cedis_list %}
+        <option value="{{ c.nombre }}" data-id="{{ c.id }}">{{ c.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Sexo:</label>
+    <select name="sexo" required>
+      <option value="">-- Selecciona --</option>
+      <option value="Hombre">Hombre</option>
+      <option value="Mujer">Mujer</option>
+      <option value="Otro">Otro</option>
+    </select>
+
+    <label>Nombre:</label>
+    <select name="nombre" id="nombre" required>
+      <option value="">-- Selecciona un CEDIS primero --</option>
+    </select>
+
+    <label for="puesto">Puesto:</label>
+<select name="puesto" id="puesto" required>
+  <option value="">-- Selecciona un puesto --</option>
+  <option>PROMOTOR</option>
+  <option>PROMOTORA</option>
+  <option>AUX DE VENTAS</option>
+  <option>SUPERVISOR DE VENTAS</option>
+  <option>VENDEDOR DE RUTA</option>
+  <option>VENDEDORA DE RUTA</option>
+  <option>ALMACENISTA</option>
+  <option>AUX DE ALMACEN</option>
+  <option>MANIOBRAS GENERALES</option>
+  <option>LIDER DE TURNO</option>
+  <option>LIDER DE EQUIPO</option>
+  <option>EMPACADORA</option>
+  <option>EMPACADOR</option>
+  <option>LIDER DE OPERADORES</option>
+  <option>CODIFICADORA</option>
+  <option>OPERADORA DE DOPING</option>
+  <option>ENCINTADORA</option>
+  <option>LIMPIEZA</option>
+  <option>OPERADOR</option>
+  <option>INSPECTORA DE CALIDAD</option>
+  <option>AUX DE CALIDAD</option>
+  <option>ENCARGADA DE CALIDAD</option>
+  <option>PLANEACION</option>
+  <option>AUX DE PLANEACION</option>
+  <option>AUX DE PRODUCCION</option>
+  <option>JEFE DE ALMACEN</option>
+  <option>PROCESOS</option>
+  <option>SISTEMAS</option>
+  <option>JEDE DE CONTABILIDAD</option>
+  <option>ENCARGADO DE CREDITOS Y COBRANZAS</option>
+  <option>AUX DE CREDITOS Y COBRANZAS</option>
+  <option>GASTOS</option>
+  <option>ENCARGADA DE INGRESOS</option>
+  <option>AUX DE INGRESOS</option>
+  <option>RECEPCIONISTA</option>
+  <option>COMPRAS</option>
+  <option>AUX DE RECURSOS HUMANOS</option>
+  <option>JEFE DE RECURSOS HUMANOS</option>
+  <option>GERENTE REGIONAL DE VENTAS</option>
+  <option>TRANSPORTES LOBITOS</option>
+  <option>AUX ADMINISTRATIVO</option>
+  <option>EMBALAJE</option>
+  <option>CORDINADOR DE MANTENIMIENTO</option>
+  <option>AUX DE MANTENIMIENTO</option>
+  <option>ENCARGADO DE CEDIS</option>
+</select>
+
+
+    <label>Fecha de Inicio:</label>
+    <input type="date" name="fecha_inicio" required>
+
+    <label>Fecha de Finalización:</label>
+    <input type="date" name="fecha_fin">
+
     <button type="submit">Registrar</button>
   </form>
-  <br>
-  <a href="{{ url_for('proximos') }}">Ver Contratos por Vencer</a>
+
+  <a href="{{ url_for('proximos') }}">🔍 Ver Contratos por Vencer</a>
+  <a href="{{ url_for('registrar_personal') }}">👤 Alta de Personal</a><br>
+  <a href="{{ url_for('baja_personal') }}">❌ Panel de Baja de Personal</a>
+  <a href="{{ url_for('cedis2') }}">🏢 Alta de CEDIS</a>
+</main>
+
+<!-- Script para cargar personal dinámicamente -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const cedisSelect = document.getElementById('cedis');
+    const nombreSelect = document.getElementById('nombre');
+
+    cedisSelect.addEventListener('change', function () {
+      const selectedOption = cedisSelect.options[cedisSelect.selectedIndex];
+      const cedisId = selectedOption.getAttribute('data-id');
+
+      if (!cedisId) {
+        nombreSelect.innerHTML = '<option value="">-- Selecciona un CEDIS primero --</option>';
+        return;
+      }
+
+      fetch(`/obtener_personal/${cedisId}`)
+        .then(response => response.json())
+        .then(data => {
+          nombreSelect.innerHTML = '<option value="">-- Selecciona personal --</option>';
+          data.forEach(p => {
+            const option = document.createElement('option');
+            option.value = p.nombre;
+            option.textContent = p.nombre;
+            nombreSelect.appendChild(option);
+          });
+        });
+    });
+  });
+</script>
+
 </body>
 </html>
