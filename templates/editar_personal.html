@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Personal</title>
+</head>
+<body>
+  <h2>Editar Personal</h2>
+  <form method="POST">
+    <label>Nombre:</label>
+    <input type="text" name="nombre" value="{{ persona.nombre }}" required>
+
+    <label>CEDIS:</label>
+    <select name="cedis_id">
+      {% for c in cedis_list %}
+        <option value="{{ c.id }}" {% if c.id == persona.cedis_id %}selected{% endif %}>{{ c.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Guardar Cambios</button>
+  </form>
+
+  <a href="{{ url_for('registrar_personal') }}">Volver</a>
+</body>
+</html>

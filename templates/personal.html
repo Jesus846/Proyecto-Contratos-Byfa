@@ -22,7 +22,7 @@
     }
 
     main {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 30px auto;
       background: #fff;
       padding: 30px 40px;
@@ -101,7 +101,44 @@
       background-color: #f8f8f8;
     }
 
-    a {
+    .acciones a, .acciones form {
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .btn-editar, .btn-eliminar {
+      background-color: #ffa726;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-editar:hover {
+      background-color: #fb8c00;
+    }
+
+    .btn-eliminar {
+      background-color: #ef5350;
+    }
+
+    .btn-eliminar:hover {
+      background-color: #e53935;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    a.volver {
       display: block;
       text-align: center;
       margin-top: 30px;
@@ -111,21 +148,30 @@
       font-weight: bold;
     }
 
-    a:hover {
+    a.volver:hover {
       text-decoration: underline;
     }
-
   </style>
+  <script>
+    function filtrarTabla() {
+      const input = document.getElementById("buscador");
+      const filtro = input.value.toLowerCase();
+      const filas = document.querySelectorAll("#tabla-personal tbody tr");
+
+      filas.forEach(fila => {
+        const nombre = fila.querySelector("td").textContent.toLowerCase();
+        fila.style.display = nombre.includes(filtro) ? "" : "none";
+      });
+    }
+  </script>
 </head>
 <body>
 
-  <header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; background: linear-gradient(to right, #ff7043, #ffa726); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Izquierdo" style="height: 100px;">
-    
-    <div style="font-size: 28px; font-weight: bold; color: white; text-align: center;">Alta de Personal</div>
-    
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Derecho" style="height: 100px;">
-  </header>
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 30px;">
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Izquierdo" style="height: 100px;">
+  <div style="font-size: 28px; font-weight: bold; color: white;">Alta de Personal</div>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Derecho" style="height: 100px;">
+</header>
 
 <main>
   <form method="POST">
@@ -147,7 +193,7 @@
   </form>
 
   <h3>Filtrar Personal por CEDIS</h3>
-  <form method="get" style="margin-bottom: 20px;">
+  <form method="get">
     <select name="cedis_id" onchange="this.form.submit()">
       <option value="">-- Selecciona un CEDIS --</option>
       {% for c in cedis_list %}
@@ -157,24 +203,38 @@
   </form>
 
   {% if selected_cedis_id %}
+    <h3>Buscar por Nombre</h3>
+    <input type="text" id="buscador" class="search-bar" placeholder="Escribe un nombre..." onkeyup="filtrarTabla()">
+
     <h3>Personal Registrado</h3>
-    <table>
-      <tr>
-        <th>Nombre</th>
-        <th>CEDIS</th>
-      </tr>
-      {% for p in personal %}
-      <tr>
-        <td>{{ p.nombre }}</td>
-        <td>{{ p.cedis.nombre }}</td>
-      </tr>
-      {% endfor %}
+    <table id="tabla-personal">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>CEDIS</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in personal %}
+        <tr>
+          <td>{{ p.nombre }}</td>
+          <td>{{ p.cedis.nombre }}</td>
+          <td class="acciones">
+            <a href="{{ url_for('editar_personal', personal_id=p.id) }}" class="btn-editar">Editar</a>
+            <form action="{{ url_for('eliminar_personal', personal_id=p.id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este registro?');">
+              <button type="submit" class="btn-eliminar">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   {% elif cedis_list %}
     <p style="text-align: center; margin-top: 20px;">Selecciona un CEDIS para ver su personal registrado.</p>
   {% endif %}
 
-  <a href="{{ url_for('index') }}">⬅️ Volver al Inicio</a>
+  <a href="{{ url_for('index') }}" class="volver">⬅️ Volver al Inicio</a>
 </main>
 
 </body>

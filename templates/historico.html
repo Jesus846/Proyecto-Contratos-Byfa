@@ -19,6 +19,13 @@
       font-size: 28px;
       font-weight: bold;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header img {
+      height: 100px;
     }
 
     main {
@@ -43,7 +50,7 @@
       margin-bottom: 10px;
     }
 
-    select {
+    select, input[type="text"] {
       width: 100%;
       padding: 12px;
       font-size: 16px;
@@ -54,7 +61,7 @@
       transition: 0.3s;
     }
 
-    select:focus {
+    select:focus, input[type="text"]:focus {
       border-color: #ff9800;
       background-color: #fff9c4;
       outline: none;
@@ -112,18 +119,16 @@
 </head>
 <body>
 
-
-<header style="display: flex; align-items: center; justify-content: space-between; padding: 10px 30px; background: linear-gradient(to right, #ff7043, #ffa726); box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Izquierdo" style="height: 100px;">
-  
-  <div style="font-size: 28px; font-weight: bold; color: white; text-align: center;">Histórico de Contratos</div>
-  
-  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Derecho" style="height: 100px;">
+<header>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Izquierdo">
+  <div>Histórico de Contratos</div>
+  <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo Derecho">
 </header>
 
 <main>
   <h2>Todos los Contratos Registrados</h2>
 
+  <!-- Filtro por CEDIS -->
   <form method="get" action="{{ url_for('historico') }}">
     <label for="cedis">Filtrar por CEDIS:</label>
     <select name="cedis" id="cedis" onchange="this.form.submit()">
@@ -137,40 +142,61 @@
   </form>
 
   {% if contratos %}
-  <table>
-    <tr>
-      <th>Nombre</th>
-      <th>CEDIS</th>
-      <th>Puesto</th>
-      <th>Fecha Inicio</th>
-      <th>Fecha Fin</th>
-      <th>Acciones</th> <!-- Nueva columna -->
-    </tr>
-    {% for contrato in contratos %}
-    <tr>
-      <td>{{ contrato.nombre }}</td>
-      <td>{{ contrato.cedis }}</td>
-      <td>{{ contrato.puesto }}</td>
-      <td>{{ contrato.fecha_inicio.strftime('%d/%m/%Y') }}</td>
-      <td>
-        {% if contrato.fecha_fin %}
-          {{ contrato.fecha_fin.strftime('%d/%m/%Y') }}
-        {% else %}
-          Indefinido
-        {% endif %}
-      </td>
-      <td>
-        <a href="{{ url_for('editar_contrato', contrato_id=contrato.id) }}" style="color: #ff5722; font-weight: bold;">✏️ Modificar</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
+    <!-- Búsqueda por nombre -->
+    <label for="buscador">Buscar por Nombre:</label>
+    <input type="text" id="buscador" placeholder="Escribe un nombre..." onkeyup="filtrarTabla()">
+
+    <table id="tabla-contratos">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>CEDIS</th>
+          <th>Puesto</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contrato in contratos %}
+        <tr>
+          <td>{{ contrato.nombre }}</td>
+          <td>{{ contrato.cedis }}</td>
+          <td>{{ contrato.puesto }}</td>
+          <td>{{ contrato.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+          <td>
+            {% if contrato.fecha_fin %}
+              {{ contrato.fecha_fin.strftime('%d/%m/%Y') }}
+            {% else %}
+              Indefinido
+            {% endif %}
+          </td>
+          <td>
+            <a href="{{ url_for('editar_contrato', contrato_id=contrato.id) }}" style="color: #ff5722; font-weight: bold;">✏️ Modificar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% elif selected_cedis %}
-  <p>No hay contratos registrados para este CEDIS.</p>
+    <p>No hay contratos registrados para este CEDIS.</p>
   {% endif %}
 
   <a href="{{ url_for('index') }}">⏪ Volver al Registro</a>
 </main>
+
+<script>
+  function filtrarTabla() {
+    const input = document.getElementById("buscador");
+    const filtro = input.value.toLowerCase();
+    const filas = document.querySelectorAll("#tabla-contratos tbody tr");
+
+    filas.forEach(fila => {
+      const nombre = fila.querySelector("td").textContent.toLowerCase();
+      fila.style.display = nombre.includes(filtro) ? "" : "none";
+    });
+  }
+</script>
 
 </body>
 </html>

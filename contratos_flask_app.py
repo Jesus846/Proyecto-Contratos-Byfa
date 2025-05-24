@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 import os
 from flask import render_template, request, redirect, url_for
 from datetime import datetime
+from flask import jsonify, request
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contratos.db'
@@ -281,7 +282,52 @@ def editar_contrato(contrato_id):
 
     return render_template('editar_contrato.html', contrato=contrato, cedis_list=cedis_list)
 
+# Editar personal
+@app.route('/editar_personal/<int:personal_id>', methods=['GET', 'POST'])
+def editar_personal(personal_id):
+    persona = Personal.query.get_or_404(personal_id)
+    cedis_list = Cedis.query.all()
 
+    if request.method == 'POST':
+        persona.nombre = request.form['nombre']
+        persona.cedis_id = int(request.form['cedis_id'])
+        db.session.commit()
+        return redirect(url_for('registrar_personal', cedis_id=persona.cedis_id))
+
+    return render_template('editar_personal.html', persona=persona, cedis_list=cedis_list)
+
+
+# Eliminar personal
+@app.route('/eliminar_personal/<int:personal_id>', methods=['POST'])
+def eliminar_personal(personal_id):
+    persona = Personal.query.get_or_404(personal_id)
+    cedis_id = persona.cedis_id
+    db.session.delete(persona)
+    db.session.commit()
+    return redirect(url_for('registrar_personal', cedis_id=cedis_id))
+
+from flask import jsonify, request
+
+@app.route('/buscar_personal')
+def buscar_personal():
+    query = request.args.get('query', '').strip()
+    cedis_id = request.args.get('cedis_id', type=int)
+
+    if not cedis_id:
+        return jsonify([])
+
+    personal = Personal.query.filter(
+        Personal.cedis_id == cedis_id,
+        Personal.nombre.ilike(f'%{query}%')
+    ).all()
+
+    return jsonify([
+        {
+            'id': p.id,
+            'nombre': p.nombre,
+            'cedis': p.cedis.nombre
+        } for p in personal
+    ])
 
 
 
