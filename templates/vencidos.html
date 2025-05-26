@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contratos Vencidos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(to right, #ff7043, #ffa726);
+      padding: 10px 30px;
+      text-align: center;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    header img {
+      height: 100px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff3e0;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #d84315;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 2px solid #ffe082;
+      padding: 12px 15px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    th {
+      background-color: #ffcc80;
+      color: #bf360c;
+    }
+
+    tr:nth-child(even) {
+      background-color: #fff9c4;
+    }
+
+    tr:hover {
+      background-color: #ffe082;
+    }
+
+    .btn-baja {
+      background-color: #e53935;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .btn-baja:hover {
+      background-color: #c62828;
+    }
+
+    a.nav-link {
+      display: inline-block;
+      margin-top: 25px;
+      font-size: 16px;
+      color: #e64a19;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a.nav-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo izquierdo">
+    <div>📛 Contratos Vencidos</div>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo derecho">
+  </header>
+
+  <main>
+    <h2>Empleados con Contrato Vencido</h2>
+
+    {% if contratos %}
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>CEDIS</th>
+          <th>Puesto</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in contratos %}
+        <tr>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.cedis }}</td>
+          <td>{{ c.puesto }}</td>
+          <td>{{ c.fecha_inicio.strftime('%d/%m/%Y') }}</td>
+          <td>{{ c.fecha_fin.strftime('%d/%m/%Y') }}</td>
+          <td>
+            <a href="{{ url_for('confirmar_baja', empleado_id=c.id) }}" class="btn-baja">Dar de baja</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <div style="text-align: center; color: #d84315; font-weight: bold; margin-top: 20px;">
+        No hay contratos vencidos.
+      </div>
+    {% endif %}
+
+    <div style="text-align: center;">
+      <a href="{{ url_for('index') }}" class="nav-link">⏪ Volver al Registro</a>
+    </div>
+  </main>
+
+</body>
+</html>

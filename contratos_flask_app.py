@@ -329,6 +329,15 @@ def buscar_personal():
         } for p in personal
     ])
 
+@app.route('/vencidos')
+def contratos_vencidos():
+    hoy = date.today()
+    contratos = Contratado.query.filter(
+        Contratado.fecha_fin != None,
+        Contratado.fecha_fin < hoy
+    ).all()
+    return render_template('vencidos.html', contratos=contratos)
+
 
 
 if __name__ == '__main__':
